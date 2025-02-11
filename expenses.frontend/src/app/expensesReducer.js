@@ -34,20 +34,18 @@ const expensesReducer = (state = initialState, action) => {
       return { ...state, expenses: [...action.payload] };
     case Actiontypes.NEW_EXPENSE:
       return { ...state, expenses: [action.payload, ...state.expenses] };
-    case Actiontypes.EDIT_EXPENSE:
-      var expenses = state.expenses.map((expense) => {
-        if (expense.id === action.payload.id) {
-          expense = action.payload;
-        }
-        return expense;
-      });
-      return { ...state, expenses: [...state.expenses] };
-    case Actiontypes.DELETE_EXPENSE:
-      expenses = state.expenses.filter(
+    case Actiontypes.EDIT_EXPENSE: {
+      const updatedExpenses = state.expenses.map((expense) =>
+        expense.id === action.payload.id ? action.payload : expense
+      );
+      return { ...state, expenses: updatedExpenses };
+    }
+    case Actiontypes.DELETE_EXPENSE: {
+      const remainingExpenses = state.expenses.filter(
         (expense) => expense.id !== action.payload.id
       );
-      return { ...state, expense: [...expenses] };
-
+      return { ...state, expenses: remainingExpenses };
+    }
     default:
       return state;
   }

@@ -17,7 +17,7 @@ export const GetExpenses = async (dispatch) => {
         amount: 18.16,
       },
       {
-        id: 1,
+        id: 3,
         description: "Loan",
         amount: 600,
       },

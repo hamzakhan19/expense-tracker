@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { NewExpense } from "../services/expenses";
+import { DeleteExpense, EditExpense, NewExpense } from "../services/expenses";
 
 const ExpenseForm = ({ expense, setIsEditing }) => {
   const descriptions = [
@@ -14,7 +14,7 @@ const ExpenseForm = ({ expense, setIsEditing }) => {
 
   const [amount, setAmount] = useState(0);
   const [description, setDescription] = useState(descriptions[0]);
-  const [isNewExpense, setIsNewExpense] = useState(true); // Assuming a state to toggle between new and edit
+  const [isNewExpense, setIsNewExpense] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -22,8 +22,10 @@ const ExpenseForm = ({ expense, setIsEditing }) => {
     if (expense !== undefined) {
       setIsNewExpense(false);
       setAmount(expense.amount);
+      setDescription(expense.description); // Update description when editing
     } else {
       setIsNewExpense(true);
+      setDescription(descriptions[0]); // Reset to default description if needed
     }
   }, [expense]);
 
@@ -36,8 +38,13 @@ const ExpenseForm = ({ expense, setIsEditing }) => {
       onSubmit={(e) => {
         e.preventDefault();
         if (isNewExpense) {
-          NewExpense(dispatch, { description: description, amount: amount });
+          NewExpense(dispatch, { description, amount });
         } else {
+          EditExpense(dispatch, {
+            id: expense.id,
+            description,
+            amount,
+          });
           setIsEditing(false);
         }
       }}
@@ -61,7 +68,7 @@ const ExpenseForm = ({ expense, setIsEditing }) => {
             type="number"
             value={amount}
             step="0.01"
-            onChange={(e) => setAmount(e.target.value)}
+            onChange={(e) => setAmount(parseFloat(e.target.value))}
           />
         </Col>
         <Col style={{ marginTop: "auto" }}>
@@ -71,7 +78,11 @@ const ExpenseForm = ({ expense, setIsEditing }) => {
             </Button>
           ) : (
             <Col>
-              <Button style={{ marginRight: "2px" }} variant="danger">
+              <Button
+                style={{ marginRight: "2px" }}
+                variant="danger"
+                onClick={() => DeleteExpense(dispatch, expense)}
+              >
                 Delete
               </Button>
               <Button

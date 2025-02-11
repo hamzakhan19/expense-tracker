@@ -13,8 +13,8 @@ const ExpenseList = () => {
   }, []);
 
   return expenses.map((e) => (
-    <div style={{ marginBottom: "1rem" }}>
-      <ListRow expense={e} key={e.Id} />
+    <div key={e.id} style={{ marginBottom: "1rem" }}>
+      <ListRow expense={e} />
     </div>
   ));
 };
