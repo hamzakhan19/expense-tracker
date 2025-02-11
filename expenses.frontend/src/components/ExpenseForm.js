@@ -38,12 +38,15 @@ const ExpenseForm = ({ expense, setIsEditing }) => {
       onSubmit={(e) => {
         e.preventDefault();
         if (isNewExpense) {
-          NewExpense(dispatch, { description, amount });
+          NewExpense(dispatch, {
+            description: description,
+            amount: Number(amount),
+          });
         } else {
           EditExpense(dispatch, {
             id: expense.id,
-            description,
-            amount,
+            description: description,
+            amount: Number(amount),
           });
           setIsEditing(false);
         }
