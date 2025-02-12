@@ -1,7 +1,8 @@
-import { React, useEffect, useState } from "react";
+// ExpenseList Component
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GetExpenses } from "../services/expenses";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Row, Card, Container } from "react-bootstrap";
 import ExpenseForm from "./ExpenseForm";
 
 const ExpenseList = () => {
@@ -12,11 +13,13 @@ const ExpenseList = () => {
     GetExpenses(dispatch);
   }, []);
 
-  return expenses.map((e) => (
-    <div key={e.id} style={{ marginBottom: "1rem" }}>
-      <ListRow expense={e} />
-    </div>
-  ));
+  return (
+    <Container className="mt-4">
+      {expenses.map((e) => (
+        <ListRow key={e.id} expense={e} />
+      ))}
+    </Container>
+  );
 };
 
 const ListRow = ({ expense }) => {
@@ -25,18 +28,23 @@ const ListRow = ({ expense }) => {
   return isEditing ? (
     <ExpenseForm expense={expense} setIsEditing={setIsEditing} />
   ) : (
-    <div>
-      <Row>
-        <Col>{expense.description}</Col>
-        <Col>${expense.amount}</Col>
-        <Col>
-          <Button variant="warning" onClick={() => setIsEditing(!isEditing)}>
-            Edit
-          </Button>
-        </Col>
-      </Row>
-      <hr />
-    </div>
+    <Card className="mb-3 shadow-sm border-0">
+      <Card.Body>
+        <Row className="align-items-center">
+          <Col>
+            <strong>{expense.description}</strong>
+          </Col>
+          <Col className="text-success">
+            <strong>${expense.amount.toFixed(2)}</strong>
+          </Col>
+          <Col className="text-end">
+            <Button variant="warning" onClick={() => setIsEditing(true)}>
+              Edit
+            </Button>
+          </Col>
+        </Row>
+      </Card.Body>
+    </Card>
   );
 };
 
